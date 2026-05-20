@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An interactive Snake Game featuring standard manual play and a highly advanced AI autopilot solver using A* pathfinding and perfect Hamiltonian cycle algorithms.">
+  <title>Neural Snake AI - Play & Solve</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <h1 id="appTitle">NEURAL SNAKE AI</h1>
+      <p class="subtitle">Arcade Manual Mode vs Pathfinding Autopilot</p>
+    </header>
+
+    <main class="game-layout">
+      <!-- Left Panel: Grid Canvas -->
+      <section class="canvas-container glass-card">
+        <canvas id="gameCanvas" width="560" height="560"></canvas>
+        <div id="canvasOverlay" class="canvas-overlay hidden">
+          <div class="overlay-content">
+            <h2 id="overlayTitle">GAME OVER</h2>
+            <p id="overlayMessage">Press Space to Restart</p>
+            <button id="restartBtn" class="btn btn-primary">RESTART</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel: HUD & Controls -->
+      <section class="controls-panel">
+        <!-- Stats Card -->
+        <div class="stats-card glass-card">
+          <div class="stat-group">
+            <span class="stat-label">SCORE</span>
+            <span id="scoreVal" class="stat-value text-neon-green">000</span>
+          </div>
+          <div class="stat-group">
+            <span class="stat-label">HIGH SCORE</span>
+            <span id="highScoreVal" class="stat-value text-neon-blue">000</span>
+          </div>
+          <div class="stat-group fill-rate-group">
+            <div class="fill-rate-header">
+              <span class="stat-label">GRID FILL RATE</span>
+              <span id="fillRateVal" class="stat-value text-neon-purple">0.0%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="fillRateProgress" class="progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode & Solver Selection -->
+        <div class="settings-card glass-card">
+          <h2>CONTROLS</h2>
+          
+          <div class="control-row">
+            <span class="control-label">Autopilot Mode</span>
+            <label class="switch">
+              <input type="checkbox" id="autopilotToggle">
+              <span class="slider-round"></span>
+            </label>
+          </div>
+
+          <div id="aiSettings" class="ai-settings-group hidden">
+            <div class="control-row">
+              <label for="algorithmSelect" class="control-label">Algorithm</label>
+              <select id="algorithmSelect" class="styled-select">
+                <option value="smart">Smart A* + Tail Safety</option>
+                <option value="hamiltonian">Perfect Hamiltonian Loop (100% Win)</option>
+              </select>
+            </div>
+            <div class="algorithm-info">
+              <p id="algoDesc">A* pathfinding with lookahead simulation to avoid getting trapped.</p>
+            </div>
+          </div>
+
+          <div class="control-row speed-row">
+            <label for="speedRange" class="control-label">Speed Mode: <span id="speedLabel">Normal</span></label>
+            <input type="range" id="speedRange" min="1" max="5" value="3" class="styled-range">
+          </div>
+
+          <div class="button-group">
+            <button id="pausePlayBtn" class="btn btn-secondary">PAUSE</button>
+            <button id="manualControlsHelpBtn" class="btn btn-info">CONTROLS HELP</button>
+          </div>
+        </div>
+
+        <!-- Debug / AI Telemetry Card -->
+        <div class="telemetry-card glass-card">
+          <h2>AI TELEMETRY</h2>
+          <div class="telemetry-grid">
+            <div class="telemetry-item">
+              <span class="telemetry-label">Status:</span>
+              <span id="aiStatus" class="telemetry-value">Idle</span>
+            </div>
+            <div class="telemetry-item">
+              <span class="telemetry-label">Path Length:</span>
+              <span id="pathLength" class="telemetry-value">-</span>
+            </div>
+            <div class="telemetry-item">
+              <span class="telemetry-label">Decisions / Sec:</span>
+              <span id="decisionsPerSec" class="telemetry-value">-</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal for Help -->
+    <div id="helpModal" class="modal hidden">
+      <div class="modal-content glass-card">
+        <h2>HOW TO PLAY & SOLVE</h2>
+        <div class="modal-body">
+          <h3>Manual Mode</h3>
+          <p>Use <strong>W, A, S, D</strong> or the <strong>Arrow Keys</strong> to direct the snake. Eat the neon energy bits to grow. Avoid hitting the borders or your own body!</p>
+          <h3>Autopilot Mode</h3>
+          <p>Toggle the <strong>Autopilot Mode</strong> to let the AI take over. Watch it run algorithms in real-time:</p>
+          <ul>
+            <li><strong>Smart A* + Tail Safety:</strong> Runs A* pathfinding. If the food is unreachable or unsafe, it follows its tail to clear space. It is fast and dynamic!</li>
+            <li><strong>Perfect Hamiltonian Loop:</strong> Generates a cycle covering all grid cells. Guaranteed to score a perfect 100% win, but strictly follows the path.</li>
+          </ul>
+        </div>
+        <button id="closeHelpBtn" class="btn btn-primary">GOT IT</button>
+      </div>
+    </div>
+
+    <footer class="app-footer">
+      <p>Designed with Neural Core Systems &bull; Press <kbd>ESC</kbd> or <kbd>P</kbd> to Pause &bull; Press <kbd>A</kbd> to Toggle Autopilot</p>
+    </footer>
+  </div>
+
+  <script src="ai.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
