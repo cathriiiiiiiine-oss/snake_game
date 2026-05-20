@@ -136,6 +136,33 @@ function init() {
   closeHelpBtn.addEventListener('click', () => helpModal.classList.add('hidden'));
   restartBtn.addEventListener('click', resetGame);
 
+  // Touch controls for mobile devices
+  let touchStartX = 0;
+  let touchStartY = 0;
+  canvas.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  canvas.addEventListener('touchend', (e) => {
+    if (isPaused || isAutopilot || isGameOver) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    const threshold = 30; // minimum swipe distance
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (Math.abs(dx) > threshold) {
+        if (dx > 0 && direction !== 'LEFT') { nextDirection = 'RIGHT'; gameStarted = true; }
+        else if (dx < 0 && direction !== 'RIGHT') { nextDirection = 'LEFT'; gameStarted = true; }
+      }
+    } else {
+      if (Math.abs(dy) > threshold) {
+        if (dy > 0 && direction !== 'UP') { nextDirection = 'DOWN'; gameStarted = true; }
+        else if (dy < 0 && direction !== 'DOWN') { nextDirection = 'UP'; gameStarted = true; }
+      }
+    }
+  }, { passive: true });
+
   // Initialize game state
   resetGame();
 
